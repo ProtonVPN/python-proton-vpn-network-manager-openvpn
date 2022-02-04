@@ -14,8 +14,8 @@ setup(
     install_requires=["proton-core"],
     entry_points={
         "proton_loader_nm_protocol": [
-            "openvpn_tcp = proton.vpn.backend.linux.networkmanager.protocol.openvpn:OpenVPNTCP",
-            "openvpn_udp = proton.vpn.backend.linux.networkmanager.protocol.openvpn:OpenVPNUDP",
+            "openvpn-tcp = proton.vpn.backend.linux.networkmanager.protocol.openvpn:OpenVPNTCP",
+            "openvpn-udp = proton.vpn.backend.linux.networkmanager.protocol.openvpn:OpenVPNUDP",
         ]
     },
     license="GPLv3",
