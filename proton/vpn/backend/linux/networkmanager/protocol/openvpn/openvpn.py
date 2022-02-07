@@ -5,23 +5,6 @@ class OpenVPN(LinuxNetworkManager):
     virtual_device_name = "proton0"
     connection = None
 
-    # @classmethod
-    # def _get_priority(cls):
-    #     return 1
-
-    # @classmethod
-    # def _validate(cls):
-    #     # FIX ME: This should do a validation to ensure that NM can be used
-    #     return True
-
-    # @staticmethod
-    # def get_by_protocol(protocol: str):
-    #     """Get VPN connection based on protocol."""
-    #     if "tcp" in protocol.lower():
-    #         return OpenVPNTCP
-    #     else:
-    #         return OpenVPNUDP
-
     def _configure_connection(self, vpnconfig):
         """Configure imported vpn connection.
 
@@ -107,9 +90,6 @@ class OpenVPN(LinuxNetworkManager):
             "password", password
         )
 
-    def down(self):
-        self._remove_connection_async(self._get_protonvpn_connection(True))
-
 
 class OpenVPNTCP(OpenVPN):
     """Creates a OpenVPNTCP connection."""
@@ -139,7 +119,6 @@ class OpenVPNUDP(OpenVPN):
     """Creates a OpenVPNUDP connection."""
     protocol = "openvpn_udp"
     _persistence_prefix = "nm_{}_".format(protocol)
-
 
     @classmethod
     def _get_priority(cls):
