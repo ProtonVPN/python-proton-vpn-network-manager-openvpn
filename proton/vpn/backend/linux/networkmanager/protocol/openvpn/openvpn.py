@@ -130,7 +130,7 @@ class OpenVPNUDP(OpenVPN):
         return True
 
     def _setup(self):
-        from .vpnconfiguration import VPNConfiguration
+        from proton.vpn.connection.vpnconfiguration import VPNConfiguration
         vpnconfig = VPNConfiguration.from_factory(self.protocol)
         vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
         vpnconfig.use_certificate = self._use_certificate
