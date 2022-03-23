@@ -90,6 +90,15 @@ class OpenVPN(LinuxNetworkManager):
             "password", password
         )
 
+    def _setup(self):
+        from proton.vpn.connection.vpnconfiguration import VPNConfiguration
+        vpnconfig = VPNConfiguration.from_factory(self.protocol)
+        vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
+        vpnconfig.use_certificate = self._use_certificate
+
+        self._configure_connection(vpnconfig)
+        self._add_connection_async(self.connection)
+
 
 class OpenVPNTCP(OpenVPN):
     """Creates a OpenVPNTCP connection."""
@@ -105,15 +114,6 @@ class OpenVPNTCP(OpenVPN):
         # FIX ME: This should do a validation to ensure that NM can be used
         return True
 
-    def _setup(self):
-        from proton.vpn.connection.vpnconfiguration import VPNConfiguration
-        vpnconfig = VPNConfiguration.from_factory(self.protocol)
-        vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
-        vpnconfig.use_certificate = self._use_certificate
-
-        self._configure_connection(vpnconfig)
-        self._add_connection_async(self.connection)
-
 
 class OpenVPNUDP(OpenVPN):
     """Creates a OpenVPNUDP connection."""
@@ -128,12 +128,3 @@ class OpenVPNUDP(OpenVPN):
     def _validate(cls):
         # FIX ME: This should do a validation to ensure that NM can be used
         return True
-
-    def _setup(self):
-        from proton.vpn.connection.vpnconfiguration import VPNConfiguration
-        vpnconfig = VPNConfiguration.from_factory(self.protocol)
-        vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
-        vpnconfig.use_certificate = self._use_certificate
-
-        self._configure_connection(vpnconfig)
-        self._add_connection_async(self.connection)
