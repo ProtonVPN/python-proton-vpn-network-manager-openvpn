@@ -1,3 +1,4 @@
+import os
 from proton.vpn.backend.linux.networkmanager import LinuxNetworkManager
 
 
@@ -85,6 +86,11 @@ class OpenVPN(LinuxNetworkManager):
         self.__vpn_settings.add_data_item(
             "username", username
         )
+        # Use System wide password if we are root (No Secret Agent)
+        # See https://people.freedesktop.org/~lkundrak/nm-docs/nm-settings.html#secrets-flags
+        # => Allow headless testing
+        if os.getuid() == 0:
+            self.__vpn_settings.n.add_data_item("password-flags", "0")
         self.__vpn_settings.add_secret(
             "password", password
         )
