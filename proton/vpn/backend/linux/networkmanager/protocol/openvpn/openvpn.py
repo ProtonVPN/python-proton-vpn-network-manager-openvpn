@@ -63,11 +63,10 @@ class OpenVPN(LinuxNetworkManager):
         except AttributeError:
             return
 
-        custom_dns = self.settings.dns_custom_ips
         ipv4_config.props.ignore_auto_dns = True
         ipv6_config.props.ignore_auto_dns = True
 
-        ipv4_config.props.dns = custom_dns
+        ipv4_config.props.dns = self._settings.dns_custom_ips
 
     def __set_custom_connection_id(self):
         self.__connection_settings.props.id = self._get_servername()
@@ -97,7 +96,7 @@ class OpenVPN(LinuxNetworkManager):
         vpnconfig.use_certificate = self._use_certificate
 
         self._configure_connection(vpnconfig)
-        self._add_connection_async(self.connection)
+        self.nm_client._add_connection_async(self.connection)
 
 
 class OpenVPNTCP(OpenVPN):
