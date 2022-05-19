@@ -11,7 +11,10 @@ setup(
     url="https://github.com/ProtonVPN/pyhon-protonvpn-network-manager-openvpn",
     packages=find_namespace_packages(include=['proton.vpn.backend.linux.networkmanager.protocol.openvpn']),
     include_package_data=True,
-    install_requires=["proton-core","proton-vpn-network-manager"],
+    install_requires=["proton-core", "proton-vpn-network-manager"],
+    extras_require={
+        "development": ["wheel", "pytest", "pytest-coverage"]
+    },
     entry_points={
         "proton_loader_nm_protocol": [
             "openvpn-tcp = proton.vpn.backend.linux.networkmanager.protocol.openvpn:OpenVPNTCP",
