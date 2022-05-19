@@ -18,6 +18,7 @@ setup(
             "openvpn-udp = proton.vpn.backend.linux.networkmanager.protocol.openvpn:OpenVPNUDP",
         ]
     },
+    python_requires=">=3.8",
     license="GPLv3",
     platforms="OS Independent",
     classifiers=[

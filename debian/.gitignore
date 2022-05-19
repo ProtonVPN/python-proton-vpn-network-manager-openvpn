@@ -1,9 +1,9 @@
 .debhelper
 debhelper-build-stamp
 files
-python3-pvpnsrv-portforwarding.debhelper.log
-python3-pvpnsrv-portforwarding.postinst.debhelper
-python3-pvpnsrv-portforwarding.postrm.debhelper
-python3-pvpnsrv-portforwarding.prerm.debhelper
-python3-pvpnsrv-portforwarding.substvars
-python3-pvpnsrv-portforwarding
+python3-proton-vpn-network-manager-openvpn.debhelper.log
+python3-proton-vpn-network-manager-openvpn.postinst.debhelper
+python3-proton-vpn-network-manager-openvpn.postrm.debhelper
+python3-proton-vpn-network-manager-openvpn.prerm.debhelper
+python3-proton-vpn-network-manager-openvpn.substvars
+python3-proton-vpn-network-manager-openvpn

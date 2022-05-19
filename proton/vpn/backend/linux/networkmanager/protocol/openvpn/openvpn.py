@@ -90,7 +90,7 @@ class OpenVPN(LinuxNetworkManager):
         # See https://people.freedesktop.org/~lkundrak/nm-docs/nm-settings.html#secrets-flags
         # => Allow headless testing
         if os.getuid() == 0:
-            self.__vpn_settings.n.add_data_item("password-flags", "0")
+            self.__vpn_settings.add_data_item("password-flags", "0")
         self.__vpn_settings.add_secret(
             "password", password
         )
