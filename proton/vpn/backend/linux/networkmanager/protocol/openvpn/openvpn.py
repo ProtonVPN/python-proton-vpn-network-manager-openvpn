@@ -1,5 +1,5 @@
 import os
-from proton.vpn.backend.linux.networkmanager import LinuxNetworkManager
+from proton.vpn.backend.linux.networkmanager.core import LinuxNetworkManager
 
 
 class OpenVPN(LinuxNetworkManager):
