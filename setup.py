@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     install_requires=["proton-core", "proton-vpn-network-manager"],
     extras_require={
-        "development": ["wheel", "pytest", "pytest-coverage"]
+        "development": ["wheel", "pytest", "pytest-cov"]
     },
     entry_points={
         "proton_loader_nm_protocol": [

@@ -12,3 +12,4 @@ html
 .vscode
 .idea
 venv
+.coverage
