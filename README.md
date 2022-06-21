@@ -41,10 +41,25 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Tests
+### Unit tests
 
-You can run the tests with:
+You can run the unit tests with:
 
 ```shell
-pytest
+pytest tests
 ```
+
+### Integration tests
+
+You can run the integration tests with:
+
+```shell
+pytest tests_integration
+```
+
+You can set the following environment variables to change the integration tests configuration:
+
+ * `PROTON_API_ENVIRONMENT`: the name of the Proton API environment (for example, `atlas`).
+ * `TEST_VPN_SERVER_NAME`: the name of the VPN server to connect to.
+ * `TEST_OPENVPN_USERNAME`: the OpenVPN username used to establish connections.
+ * `TEST_OPENVPN_PASSWORD`: the OpenVPN password used to establish connections.
