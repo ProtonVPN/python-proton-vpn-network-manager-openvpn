@@ -76,7 +76,7 @@ def test_networkmanager(openvpn_protocol, test_environment, vpn_server, openvpn_
         )
     )
 
-    nm_protocol = OpenVPNUDP(
+    nm_protocol = openvpn_protocol(
         vpnserver=vpn_server,
         vpncredentials=vpncredentials,
         settings=Settings()
