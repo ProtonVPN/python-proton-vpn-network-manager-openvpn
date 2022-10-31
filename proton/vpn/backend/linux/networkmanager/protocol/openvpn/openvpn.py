@@ -1,5 +1,6 @@
 import os
 from proton.vpn.backend.linux.networkmanager.core import LinuxNetworkManager
+from concurrent.futures import Future
 
 
 class OpenVPN(LinuxNetworkManager):
@@ -95,15 +96,14 @@ class OpenVPN(LinuxNetworkManager):
             "password", password
         )
 
-    def _setup(self):
+    def _setup(self) -> Future:
         from proton.vpn.connection.vpnconfiguration import VPNConfiguration
         vpnconfig = VPNConfiguration.from_factory(self.protocol)
         vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
         vpnconfig.use_certificate = self._use_certificate
 
         self._configure_connection(vpnconfig)
-        future = self.nm_client._add_connection_async(self.connection)
-        future.result()  # FIXME: we should probably return the future instead
+        return self.nm_client.add_connection_async(self.connection)
 
 
 class OpenVPNTCP(OpenVPN):
