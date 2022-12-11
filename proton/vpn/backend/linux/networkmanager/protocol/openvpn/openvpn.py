@@ -108,7 +108,7 @@ class OpenVPN(LinuxNetworkManager):
 
 class OpenVPNTCP(OpenVPN):
     """Creates a OpenVPNTCP connection."""
-    protocol = "openvpn_tcp"
+    protocol = "openvpn-tcp"
 
     @classmethod
     def _get_priority(cls):
@@ -122,7 +122,7 @@ class OpenVPNTCP(OpenVPN):
 
 class OpenVPNUDP(OpenVPN):
     """Creates a OpenVPNUDP connection."""
-    protocol = "openvpn_udp"
+    protocol = "openvpn-udp"
 
     @classmethod
     def _get_priority(cls):
