@@ -1,5 +1,5 @@
 %define unmangled_name proton-vpn-network-manager-openvpn
-%define version 0.0.2
+%define version 0.0.3
 %define release 1
 
 Prefix: %{_prefix}
@@ -49,6 +49,9 @@ python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUI
 %defattr(-,root,root)
 
 %changelog
+* Tue Dec 13 2022 Josep Llaneras <josep.llaneras@proton.ch> 0.0.3
+- Fix proton loader ids
+
 * Fri Nov 4 2022 Josep Llaneras <josep.llaneras@proton.ch> 0.0.2
 - Set up the VPN connection asynchronously
 
