@@ -1,11 +1,25 @@
-import os
-from proton.vpn.backend.linux.networkmanager.core import LinuxNetworkManager
+"""
+OpenVPN protocol implementations.
+"""
+
 from concurrent.futures import Future
+import os
+
+from getpass import getuser
+
+from proton.vpn.backend.linux.networkmanager.core import LinuxNetworkManager
+from proton.vpn.connection.vpnconfiguration import VPNConfiguration
 
 
 class OpenVPN(LinuxNetworkManager):
+    """Base class for the backends implementing the OpenVPN protocols."""
     virtual_device_name = "proton0"
     connection = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__vpn_settings = None
+        self.__connection_settings = None
 
     def _configure_connection(self, vpnconfig):
         """Configure imported vpn connection.
@@ -14,8 +28,9 @@ class OpenVPN(LinuxNetworkManager):
             :type vpnconfig: VPNConfiguration
 
         It also uses vpnserver, vpncredentials and settings for the following reasons:
-            - vpnserver is used to fetch domain, servername (optioanl)
-            - vpncredentials is used to fetch username/password for non-certificate based connections
+            - vpnserver is used to fetch domain, servername (optional)
+            - vpncredentials is used to fetch username/password for non-certificate
+              based connections
             - settings is used to fetch dns settings
         """
         self.connection = self._import_vpn_config(vpnconfig)
@@ -36,7 +51,6 @@ class OpenVPN(LinuxNetworkManager):
     def __make_vpn_user_owned(self):
         # returns NM.SettingConnection
         # https://lazka.github.io/pgi-docs/NM-1.0/classes/SettingConnection.html#NM.SettingConnection
-        from getpass import getuser
 
         self.__connection_settings.add_permission(
             "user",
@@ -97,7 +111,6 @@ class OpenVPN(LinuxNetworkManager):
         )
 
     def _setup(self) -> Future:
-        from proton.vpn.connection.vpnconfiguration import VPNConfiguration
         vpnconfig = VPNConfiguration.from_factory(self.protocol)
         vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
         vpnconfig.use_certificate = self._use_certificate
