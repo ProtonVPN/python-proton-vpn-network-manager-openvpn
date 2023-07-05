@@ -1,3 +1,9 @@
+protonvpn-network-manager-openvpn (0.0.4) unstable; urgency=medium
+
+  * Fix entry point in setup.py
+
+ -- Alexandru Cheltuitor <alexandru.cheltuitor@proton.ch>  Wed, 05 Jul 2023 12:00:00 +0100
+
 protonvpn-network-manager-openvpn (0.0.3) unstable; urgency=medium
 
   * Fix proton loader ids
