@@ -22,90 +22,93 @@ along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 from concurrent.futures import Future
 import os
-
 from getpass import getuser
 
+from gi.repository import NM
+import gi
 from proton.vpn.backend.linux.networkmanager.core import LinuxNetworkManager
 from proton.vpn.connection.vpnconfiguration import VPNConfiguration
+gi.require_version("NM", "1.0")
 
 
 class OpenVPN(LinuxNetworkManager):
     """Base class for the backends implementing the OpenVPN protocols."""
-    virtual_device_name = "proton0"
+    DNS_PRIORITY = -1500
+    VIRTUAL_DEVICE_NAME = "proton0"
     connection = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.__vpn_settings = None
-        self.__connection_settings = None
+        self._unique_id = None
+        self._vpn_settings = None
+        self._connection_settings = None
 
-    def _configure_connection(self, vpnconfig):
-        """Configure imported vpn connection.
+    def setup(self) -> Future:
+        """Methods that creates and applies any necessary changes to the connection."""
+        self._generate_connection()
+        self._modify_connection()
+        return self.nm_client.add_connection_async(self.connection)
 
-            :param vpnconfig: vpn configuration object.
-            :type vpnconfig: VPNConfiguration
+    def _generate_connection(self):
+        vpnconfig = VPNConfiguration.from_factory(self.protocol)(
+            self._vpnserver, self._vpncredentials, self._settings, self._use_certificate
+        )
 
-        It also uses vpnserver, vpncredentials and settings for the following reasons:
-            - vpnserver is used to fetch domain, servername (optional)
-            - vpncredentials is used to fetch username/password for non-certificate
-              based connections
-            - settings is used to fetch dns settings
-        """
         self.connection = self._import_vpn_config(vpnconfig)
 
-        self.__vpn_settings = self.connection.get_setting_vpn()
-        self.__connection_settings = self.connection.get_setting_connection()
+        self._unique_id = self.connection.get_uuid()
+        self._vpn_settings = self.connection.get_setting_vpn()
+        self._connection_settings = self.connection.get_setting_connection()
 
-        self._unique_id = self.__connection_settings.get_uuid()
+    def _modify_connection(self):
+        """Configure imported vpn connection.
+        """
+        self._set_custom_connection_id()
+        self._set_connection_user_owned()
+        self._set_server_certificate_check()
+        self._set_dns()
+        if not self._use_certificate:
+            self._set_vpn_credentials()
 
-        self.__make_vpn_user_owned()
-        self.__add_server_certificate_check()
-        self.__configure_dns()
-        self.__set_custom_connection_id()
+        self.connection.add_setting(self._connection_settings)
 
-        if not vpnconfig.use_certificate:
-            self.__add_vpn_credentials()
+    def _set_custom_connection_id(self):
+        self._connection_settings.set_property(NM.SETTING_CONNECTION_ID, self._get_servername())
 
-    def __make_vpn_user_owned(self):
+    def _set_connection_user_owned(self):
         # returns NM.SettingConnection
         # https://lazka.github.io/pgi-docs/NM-1.0/classes/SettingConnection.html#NM.SettingConnection
 
-        self.__connection_settings.add_permission(
-            "user",
+        self._connection_settings.add_permission(
+            NM.SETTING_USER_SETTING_NAME,
             getuser(),
             None
         )
 
-    def __add_server_certificate_check(self):
+    def _set_server_certificate_check(self):
         appened_domain = "name:" + self._vpnserver.domain
-        self.__vpn_settings.add_data_item(
+        self._vpn_settings.add_data_item(
             "verify-x509-name", appened_domain
         )
 
-    def __configure_dns(self):
+    def _set_dns(self):
         """Apply dns configurations to ProtonVPN connection."""
 
         ipv4_config = self.connection.get_setting_ip4_config()
         ipv6_config = self.connection.get_setting_ip6_config()
 
-        ipv4_config.props.dns_priority = -1500
-        ipv6_config.props.dns_priority = -1500
+        ipv4_config.set_property(NM.SETTING_IP_CONFIG_DNS_PRIORITY, self.DNS_PRIORITY)
+        ipv6_config.set_property(NM.SETTING_IP_CONFIG_DNS_PRIORITY, self.DNS_PRIORITY)
 
-        try:
-            if len(self._settings.dns_custom_ips) == 0:
-                return
-        except AttributeError:
-            return
+        if self._settings.dns_custom_ips:
+            ipv4_config.set_property(NM.SETTING_IP_CONFIG_IGNORE_AUTO_DNS, True)
+            ipv6_config.set_property(NM.SETTING_IP_CONFIG_IGNORE_AUTO_DNS, True)
+            ipv4_config.set_property(NM.SETTING_IP_CONFIG_DNS, self._settings.dns_custom_ips)
 
-        ipv4_config.props.ignore_auto_dns = True
-        ipv6_config.props.ignore_auto_dns = True
+        self.connection.add_setting(ipv4_config)
+        self.connection.add_setting(ipv6_config)
 
-        ipv4_config.props.dns = self._settings.dns_custom_ips
-
-    def __set_custom_connection_id(self):
-        self.__connection_settings.props.id = self._get_servername()
-
-    def __add_vpn_credentials(self):
+    def _set_vpn_credentials(self):
         """Add OpenVPN credentials to ProtonVPN connection.
 
         Args:
@@ -116,25 +119,17 @@ class OpenVPN(LinuxNetworkManager):
         # https://lazka.github.io/pgi-docs/NM-1.0/classes/SettingVpn.html
         username, password = self._get_user_pass(True)
 
-        self.__vpn_settings.add_data_item(
+        self._vpn_settings.add_data_item(
             "username", username
         )
         # Use System wide password if we are root (No Secret Agent)
         # See https://people.freedesktop.org/~lkundrak/nm-docs/nm-settings.html#secrets-flags
         # => Allow headless testing
         if os.getuid() == 0:
-            self.__vpn_settings.add_data_item("password-flags", "0")
-        self.__vpn_settings.add_secret(
+            self._vpn_settings.add_data_item("password-flags", "0")
+        self._vpn_settings.add_secret(
             "password", password
         )
-
-    def _setup(self) -> Future:
-        vpnconfig = VPNConfiguration.from_factory(self.protocol)
-        vpnconfig = vpnconfig(self._vpnserver, self._vpncredentials, self._settings)
-        vpnconfig.use_certificate = self._use_certificate
-
-        self._configure_connection(vpnconfig)
-        return self.nm_client.add_connection_async(self.connection)
 
 
 class OpenVPNTCP(OpenVPN):
