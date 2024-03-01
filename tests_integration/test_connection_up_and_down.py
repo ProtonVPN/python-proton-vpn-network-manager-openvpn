@@ -22,11 +22,11 @@ import subprocess
 import threading
 
 import pytest as pytest
-
+from collections import namedtuple
 from proton.vpn.connection.enum import ConnectionStateEnum
 
 from proton.vpn.backend.linux.networkmanager.protocol.openvpn import OpenVPNUDP, OpenVPNTCP
-from tests_integration.boilerplate import VPNServer, VPNCredentials, VPNUserPassCredentials, Settings
+from tests_integration.boilerplate import VPNServer, VPNCredentials, VPNUserPassCredentials, Settings, ProtocolPorts
 from tests_integration.utils import get_vpn_client_config, get_vpn_server_by_name
 
 logging.basicConfig(level=logging.DEBUG)
@@ -44,6 +44,8 @@ logger.info(f"Testing against server {VPN_SERVER_NAME}.")
 EXPECTED_CONNECTION_NAME = f"ProtonVPN {VPN_SERVER_NAME}"
 
 
+
+
 @pytest.fixture(scope="module")
 def vpn_client_config():
     return get_vpn_client_config()
@@ -55,8 +57,8 @@ def vpn_server(vpn_client_config):
     default_ports = vpn_client_config["OpenVPNConfig"]["DefaultPorts"]
     return VPNServer(
         server_ip=server["Servers"][0]["EntryIP"],
-        udp_ports=default_ports["UDP"],
-        tcp_ports=default_ports["TCP"],
+        openvpn_ports=ProtocolPorts(default_ports["UDP"], default_ports["TCP"]),
+        wireguard_ports={},
         domain=server["Domain"],
         servername=server["Name"]
     )

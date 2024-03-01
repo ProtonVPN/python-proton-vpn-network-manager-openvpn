@@ -18,13 +18,14 @@ along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 """
 from dataclasses import dataclass, field
 from typing import List
+from proton.vpn.connection.interfaces import ProtocolPorts
 
 
 @dataclass
 class VPNServer:
     server_ip: str = None
-    udp_ports: List[int] = None
-    tcp_ports: List[int] = None
+    openvpn_ports: ProtocolPorts = None
+    wireguard_ports: ProtocolPorts = None
     wg_public_key_x25519: str = None
     domain: str = None
     servername: str = None
