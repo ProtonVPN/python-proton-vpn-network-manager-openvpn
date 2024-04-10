@@ -1,5 +1,5 @@
 %define unmangled_name proton-vpn-network-manager-openvpn
-%define version 0.0.6
+%define version 0.0.7
 %define release 1
 
 Prefix: %{_prefix}
@@ -49,6 +49,9 @@ python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUI
 %defattr(-,root,root)
 
 %changelog
+* Wed Apr 10 2024 Josep Llaneras <josep.llaneras@proton.ch> 0.0.7
+- Do not override connection id in constructor
+
 * Thu Apr 4 2023 Alexandru Cheltuitor <alexandru.cheltuitor@proton.ch> 0.0.6
 - Add UI friendly protocol name
 

@@ -4,7 +4,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name="proton-vpn-network-manager-openvpn",
-    version="0.0.6",
+    version="0.0.7",
     description="Proton Technologies VPN connector for linux",
     author="Proton Technologies",
     author_email="contact@protonmail.com",

@@ -39,7 +39,6 @@ class OpenVPN(LinuxNetworkManager):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._unique_id = None
         self._vpn_settings = None
         self._connection_settings = None
 

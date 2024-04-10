@@ -1,3 +1,9 @@
+protonvpn-network-manager-openvpn (0.0.7) unstable; urgency=medium
+
+  * Do not override connection id in constructor
+
+ -- Josep Llaneras <josep.llaneras@proton.ch>  Wed, 10 Apr 2024 11:09:46 +0200
+
 protonvpn-network-manager-openvpn (0.0.6) unstable; urgency=medium
 
   * Add UI friendly protocol name
