@@ -1,5 +1,5 @@
 %define unmangled_name proton-vpn-network-manager-openvpn
-%define version 0.0.7
+%define version 0.1.0
 %define release 1
 
 Prefix: %{_prefix}
@@ -17,11 +17,13 @@ Source0: %{unmangled_name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{unmangled_name}-%{version}-%{release}-buildroot
 
+BuildRequires: python3-proton-vpn-api-core
 BuildRequires: python3-proton-vpn-network-manager
 BuildRequires: NetworkManager-openvpn
 BuildRequires: NetworkManager-openvpn-gnome
 BuildRequires: python3-setuptools
 
+Requires: python3-proton-vpn-api-core
 Requires: python3-proton-vpn-network-manager
 Requires: NetworkManager-openvpn
 Requires: NetworkManager-openvpn-gnome
@@ -49,6 +51,9 @@ python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUI
 %defattr(-,root,root)
 
 %changelog
+* Thu Jul 11 2024 Josep Llaneras <josep.llaneras@proton.ch> 0.1.0
+- Add proton-vpn-api-core depencency
+
 * Wed Apr 10 2024 Josep Llaneras <josep.llaneras@proton.ch> 0.0.7
 - Do not override connection id in constructor
 

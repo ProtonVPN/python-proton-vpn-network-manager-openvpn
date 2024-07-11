@@ -1,3 +1,9 @@
+protonvpn-network-manager-openvpn (0.1.0) unstable; urgency=medium
+
+  * Add proton-vpn-api-core depencency
+
+ -- Josep Llaneras <josep.llaneras@proton.ch>  Thu, 11 Jul 2024 09:12:44 +0200
+
 protonvpn-network-manager-openvpn (0.0.7) unstable; urgency=medium
 
   * Do not override connection id in constructor

@@ -4,14 +4,14 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name="proton-vpn-network-manager-openvpn",
-    version="0.0.7",
+    version="0.1.0",
     description="Proton Technologies VPN connector for linux",
     author="Proton Technologies",
     author_email="contact@protonmail.com",
     url="https://github.com/ProtonVPN/pyhon-protonvpn-network-manager-openvpn",
     packages=find_namespace_packages(include=['proton.vpn.backend.linux.networkmanager.protocol.openvpn']),
     include_package_data=True,
-    install_requires=["proton-core", "proton-vpn-network-manager"],
+    install_requires=["proton-vpn-api-core", "proton-vpn-network-manager"],
     extras_require={
         "development": ["wheel", "pytest", "pytest-cov", "flake8", "pylint", "pygobject-stubs"]
     },
