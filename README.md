@@ -1,3 +1,7 @@
+
+> :warning: **This module is now legacy**: The same functionality is now in proton-vpn-network-manager module, version `0.6.3` and upwards.
+
+
 # Proton VPN Network Manager OpenVPN
 
 The `proton-vpn-network-manager-openvpn` component adds support for the OpenVPN

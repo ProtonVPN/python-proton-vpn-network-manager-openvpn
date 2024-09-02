@@ -1,3 +1,9 @@
+protonvpn-network-manager-openvpn (0.1.1) unstable; urgency=medium
+
+  * Deprecate this package
+
+ -- Josep Llaneras <josep.llaneras@proton.ch>  Mon, 02 Sep 2024 10:38:59 +0200
+
 protonvpn-network-manager-openvpn (0.1.0) unstable; urgency=medium
 
   * Add proton-vpn-api-core depencency
